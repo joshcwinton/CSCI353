@@ -14,30 +14,80 @@ X = [
     ["vlow", "low", "6", "4", "small", "high", "S"],
     ["vlow", "low", "4", "4", "big", "medium", "R"]]
 
+# takes list of frequencies and returns info statistic
+def getInfo(list):
+    sum = 0
+    for i in list:
+        sum += i
+    temp = []
+    for i in list:
+        temp.append(i/sum)
+    return getEntropy(temp)
 
-def getAllFeatures(list, feature):
-    result = [];
-    for instance in list:
-        result.append(instance[feature])
-    return result;
-
+# takes list of frequencies and returns entropy statistic
 def getEntropy(list):
     sum = 0
     for i in list:
-        sum += math.log2(i) * i
-    return sum
+        if i == 0:
+            sum += 0
+        else:
+            sum += math.log2(i) * i
+    if sum == 0:
+        return 0
+    return sum * -1
 
-# Assumes all instances have same dimensionality
-# def whichSplit(list):
-
-# Need to calclulate entropy before split and average entropy after split
-
-def printList(list):
+# takes main list and returns a list of feature's value in each instance
+def generateFeatureList(list, feature):
+    result = []
     for i in list:
-        for j in i:
-            print(j, end="\t")
-        print("\n")
-    return 0
+        result.append(i[feature])
+    return result
 
+# takes list of all values and returns list of each possible value
+def getPossibleValues(list):
+    result = []
+    for i in list:
+        if i not in result:
+            result.append(i);
+    return result
 
-printList(X)
+# takes list and returns list of count for each possible value
+def getFrequencies(list):
+    result = []
+    valueList = getPossibleValues(list)
+    for i in valueList:
+        result.append(list.count(i))
+    return result
+
+def createSubList(list, value, feature):
+    result = []
+    for i in list:
+        if(i[feature] == value):
+            result.append(i)
+    return result
+
+def getInfoOfSubList(list):
+    labelList = generateFeatureList(list, len(list[0])-1)
+    freqs = getFrequencies(labelList)
+    info = getInfo(freqs)
+    return info
+
+baseEntropy = getInfoOfSubList(X);
+print("baseEntropy: ", baseEntropy)
+
+ents = []
+
+for i in range(len(X[0])-1):
+    temp = generateFeatureList(X, i)
+    values = getPossibleValues(temp)
+    for j in values:
+        a = createSubList(X, j, i)
+        info = getInfoOfSubList(a)
+    ents.append(info)
+
+gains = []
+
+for i in ents:
+    gains.append(baseEntropy-i)
+
+print(gains)
