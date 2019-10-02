@@ -100,7 +100,7 @@ def getWeightedInfoOfSubList(list, weight):
     return info
 
 baseInfo = getInfoOfSubList(dataset)
-print("Base info: ", baseInfo)
+print(f"Base info:\t{baseInfo}")
 
 gains = []
 
@@ -113,10 +113,10 @@ for feature in range(0, 6):
     gains.append(gain)
 
 for i in range(len(gains)):
-    print(f'Gain({i+1}): {gains[i]}')
+    print(f'Gain({i+1}): \t{gains[i]}')
 
 highestGain = max(gains)
 splitOn = gains.index(highestGain)
 
-print(f'Highest Gain: {highestGain}')
+print(f'Highest Gain:\t{highestGain}')
 print(f'Split on feature number {splitOn+1}')
